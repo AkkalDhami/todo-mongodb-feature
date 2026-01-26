@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "es2022",
+    "moduleResolution": "bundler"
+  },
+  "include": ["src/**/*", "configs"],
+  "exclude": ["node_modules"]
+}
