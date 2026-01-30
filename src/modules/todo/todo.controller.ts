@@ -6,6 +6,7 @@ import { AsyncHandler } from "@/shared/utils/async-handler";
 import { ApiError } from "@/shared/utils/api-error";
 import { ApiResponse } from "@/shared/utils/api-response";
 import mongoose from "mongoose";
+import { TodoFilterType } from "./todo.types";
 
 //? CREATE NEW TODO
 export const createTodo = AsyncHandler(
@@ -33,11 +34,16 @@ export const createTodo = AsyncHandler(
 export const getTodos = AsyncHandler(
   async (req: UserRequest, res: Response, next: NextFunction) => {
     const userId = req?.user?._id;
+
+    const filters: TodoFilterType = req.query;
+
     if (!userId) {
       return next(ApiError.unauthorized("Unauthorized access"));
     }
 
-    const todos = await TodoService.getTodos(userId.toString());
+    const todos = await TodoService.getTodos(userId.toString(), {
+      limit: filters.limit || '10', page: filters.page || '1', search: filters.search || '', sortBy: filters.sortBy || 'desc'
+    });
     return ApiResponse.ok(res, "Todos fetched successfully", { todos });
   }
 );
